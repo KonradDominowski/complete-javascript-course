@@ -263,3 +263,33 @@ for (let el = 0; el < populations.length; el++) {
 
 console.log(percentages);
 console.log(percentages2);
+
+
+// Looping Backwards and Loops in Loops 
+
+let listOfNeighbours = [['Canada', 'Mexico'], ['Spain'], ['Norway', 'Sweden', 'Russia']];
+
+// for (let i = 0; i < listOfNeighbours.length; i++) {
+//     for (let el = 0; el < listOfNeighbours[i].length; el++) {
+//         console.log(listOfNeighbours[i][el]);
+//     }
+// }
+
+for (const el of listOfNeighbours) {
+    for (const el2 of el) {
+        console.log(el2);
+    }
+}
+
+
+// The while loop
+
+let percentages3 = new Array()
+
+let rep = 0
+while (rep <= populations.length - 1) {
+    percentages3.push(percentageOfWorld3(populations[rep]))
+    rep++
+}
+
+console.log(percentages3);
