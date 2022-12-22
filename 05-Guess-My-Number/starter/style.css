@@ -31,6 +31,8 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  pointer-events: all;
+  opacity: 1;
 }
 
 .left {
