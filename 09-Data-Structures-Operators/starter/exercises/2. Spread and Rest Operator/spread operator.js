@@ -124,3 +124,116 @@
 
 	console.log('----------');
 }
+
+{
+	console.log('EXERCISE 9 - Find Min');
+
+	const findMin = (...numbers) => {
+		// Funkcja min nie przyjmuje tablicy danych tylko pojedyncze argumenty, 
+		// dlatego trzeba użyć operatora rest żeby rozczłonkować listę argumentów
+
+		return Math.min(...numbers);
+	}
+
+	console.log(findMin(1, 2, 5, 7));  // 1
+	console.log(findMin(1, 2, -7, 0, 5, 7, -20));  // -20
+
+	console.log('----------');
+}
+
+{
+	console.log('EXERCISE 10 - Merge Two Objects');
+
+	const object1 = {
+		'name': 'Konrad',
+		'lastName': 'Dominowski'
+	}
+
+	const object2 = {
+		'dateOfBirth': '11-03-1994'
+	};
+
+	const mergeTwoObjects = (obj1, obj2) => {
+		return { ...obj1, ...obj2 }
+	}
+
+	console.log(mergeTwoObjects(object1, object2));
+
+	console.log('----------')
+}
+
+{
+	console.log('EXERCISE 11 - Double and Return Arrays');
+
+	let arra1 = [1, 2, 3]
+	let arra2 = [1, 2, 4]
+	let arra3 = [5, 6, 7]
+	let arra4 = [1, 2, 4]
+
+	const doubleAndReturnArgs = (array, ...numbers) => {
+		const doubled = numbers.reduce((number, el) => [...number, el * 2], [])
+		return [...array, ...doubled]
+	}
+
+	console.log(doubleAndReturnArgs(arra1, 2, 4, 5));
+
+	console.log('----------')
+}
+
+{
+	console.log('EXERSICE 12 - Remove random element');
+
+	const removeRandomElement = (...arr) => {
+		const index = Math.trunc(Math.random() * arr.length)
+		console.log(arr[index]);
+		arr.splice(index, 1, 'abc')
+		return arr
+	}
+
+	let arra1 = [1, 2, 3, 4, 5, 6, 7]
+
+	console.log(removeRandomElement(...arra1));
+
+
+	console.log('----------')
+}
+
+{
+	console.log('EXERCISE 13 - Add new key value pair to an object');
+
+	const object1 = {
+		'name': 'Konrad',
+		'lastName': 'Dominowski'
+	}
+
+
+	const newKeyValue = (obj1, newKeyName, newValue) => {
+		return {
+			...obj1,
+			[newKeyName]: newValue
+		}
+	}
+
+	console.log(newKeyValue(object1, 'age', 28));
+
+	console.log('----------')
+
+}
+
+{
+	console.log('EXERCISE 14 - Remove a Key');
+
+	const object1 = {
+		'name': 'Konrad',
+		'lastName': 'Dominowski'
+	}
+
+	const removeKey = (obj1, key) => delete obj1[key]
+
+	removeKey(object1, 'name')
+
+	console.log(object1);
+
+	console.log('----------')
+}
+
