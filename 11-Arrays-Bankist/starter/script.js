@@ -61,26 +61,6 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = function (movements) {
-  // Empty container before adding displaying movements
-  containerMovements.innerHTML = ''
-
-  // Create a new HTML (not element) for each movement, and then display it
-  movements.forEach(function (mov, i) {
-    const operationType = (mov > 0) ? `deposit` : `withdrawal`
-
-    const html = `
-    <div class="movements__row">
-      <div class="movements__type movements__type--${operationType}">${i + 1} ${operationType}</div>
-      <div class="movements__value">${mov}</div>
-    </div>`;
-
-    // Add movement to the movement container 
-    containerMovements.insertAdjacentHTML('afterbegin', html)
-  })
-}
-
-displayMovements(account1.movements)
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -94,4 +74,143 @@ const currencies = new Map([
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+
+// Map method
+
+const eurToUSD = 1.1
+
+const movementsUSD = movements.map(cur => cur * eurToUSD)
+
+const movementsDescriptions = movements.map((mov, i) =>
+  `Movement ${i + 1}: You ${mov > 0 ? `deposited` : `withdrew`} ${Math.abs(mov)}.`
+)
+
+// Usernames
+
+const createUsernames = function (arr) {
+  arr.forEach((acc) => {
+    acc.username ||= acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+  })
+}
+
+createUsernames(accounts)
+
+console.log(accounts);
+
+// Filter method
+
+const deposits = movements.filter(mov => mov > 0)
+const withdrawals = movements.filter(mov => mov < 0)
+
+console.log(deposits);
+console.log(withdrawals);
+
+// Reduce method
+
+const totalBalance = movements.reduce((sum, mov) => sum + mov)
+
+console.log(totalBalance);
+
+// Maximum value
+
+const maximumMovement = movements.reduce((max, mov) => (mov > max) ? mov : max)
+
+const minimumMovement = movements.reduce((min, mov) => (mov < min) ? mov : min)
+
+console.log(maximumMovement);
+console.log(minimumMovement);
+
+
 /////////////////////////////////////////////////
+
+const displayMovements = function (movements) {
+  // Empty container before adding displaying movements
+  containerMovements.innerHTML = ''
+
+  // Create a new HTML (not element) for each movement, and then display it
+  movements.forEach(function (mov, i) {
+    const operationType = (mov > 0) ? `deposit` : `withdrawal`
+
+    const html = `
+    <div class="movements__row">
+      <div class="movements__type movements__type--${operationType}">${i + 1} ${operationType}</div>
+      <div class="movements__value">${mov} €</div>
+    </div>`;
+
+    // Add movement to the movement container 
+    containerMovements.insertAdjacentHTML('afterbegin', html)
+  })
+}
+
+const displayBalance = function (movements) {
+  // Sum all movements
+  let balance = movements.reduce((sum, mov) => sum + mov)
+
+  // Display balance
+  labelBalance.textContent = `${balance} €`
+}
+
+const displayDeposits = function (movements) {
+  let sumOfDeposits = movements
+    .filter(mov => mov > 0)
+    .reduce((sum, mov) => sum + mov)
+
+  labelSumIn.textContent = `${sumOfDeposits} €`
+}
+
+const displayWithdrawals = function (movements) {
+  let sumOfWithdrawals = Math.abs(movements
+    .filter(mov => mov < 0)
+    .reduce((sum, mov) => sum + mov))
+
+  labelSumOut.textContent = `${sumOfWithdrawals} €`
+}
+
+const displayInterest = function (account) {
+  const interest = account.movements
+    .filter(mov => mov > 0)
+    .map(mov => mov * account.interestRate / 100)
+    .filter(int => int >= 1)
+    .reduce((sum, mov) => sum + mov)
+
+  labelSumInterest.textContent = `${interest} €`
+}
+
+
+// Event Handlers
+let currentAccount;
+
+btnLogin.addEventListener('click', e => {
+
+  //Prevent page reload after submitting form
+  e.preventDefault()
+
+  let acc = accounts.find(acc => acc.username === inputLoginUsername.value)
+
+  // Optional chaining - it goes further only if acc is not undefined
+  if (acc?.pin === Number(inputLoginPin.value)) {
+
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginUsername.blur();
+    inputLoginPin.blur();
+
+    containerApp.style.opacity = 1
+    currentAccount = acc
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}`
+
+    displayMovements(currentAccount.movements)
+    displayBalance(currentAccount.movements)
+    displayDeposits(currentAccount.movements)
+    displayWithdrawals(currentAccount.movements)
+    displayInterest(currentAccount)
+
+  } else {
+    containerApp.style.opacity = 0
+
+    currentAccount = undefined
+  }
+})
